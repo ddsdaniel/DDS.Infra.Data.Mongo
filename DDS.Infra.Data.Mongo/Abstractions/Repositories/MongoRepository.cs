@@ -16,7 +16,7 @@ namespace DDS.Infra.Data.Mongo.Abstractions.Repositories
         private protected readonly IClientSessionHandle _session;
         private protected readonly IMongoClient mongoClient;
 
-        public MongoRepository(IMongoDatabase mongoDatabase, IClientSessionHandle session)
+        protected MongoRepository(IMongoDatabase mongoDatabase, IClientSessionHandle session)
         {
             mongoClient = mongoDatabase.Client;
             _session = session;
@@ -45,6 +45,9 @@ namespace DDS.Infra.Data.Mongo.Abstractions.Repositories
             return _mongoCollection.AsQueryable();
         }
 
+        public bool ConsultarSeExiste(Guid id)
+            => ConsultarPorId(id).Result != null;
+
         public async Task<TEntity> ConsultarPorId(Guid id)
         {
             return (await _mongoCollection.FindAsync(_session, entity => entity.Id == id)).FirstOrDefault();
@@ -60,5 +63,6 @@ namespace DDS.Infra.Data.Mongo.Abstractions.Repositories
             var filter = Builders<TEntity>.Filter.Eq(doc => doc.Id, id);
             await _mongoCollection.FindOneAndDeleteAsync(_session, filter);
         }
+
     }
 }
