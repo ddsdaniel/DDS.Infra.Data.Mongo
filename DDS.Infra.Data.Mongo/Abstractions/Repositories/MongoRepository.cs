@@ -1,4 +1,4 @@
-﻿using DDS.Domain.Core.Abstractions.Model.Entities;
+﻿using DDS.Domain.Core.Abstractions.Models.Entities;
 using DDS.Domain.Core.Abstractions.Repositories;
 using Flunt.Notifications;
 using MongoDB.Driver;
@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace DDS.Infra.Data.Mongo.Abstractions.Repositories
 {
-    public abstract class MongoRepository<TEntity> : Notifiable, IRepository<TEntity>
+    public class MongoRepository<TEntity> : Notifiable, IRepository<TEntity>
         where TEntity : Entity
     {
         private protected readonly IMongoCollection<TEntity> _mongoCollection;
         private protected readonly IClientSessionHandle _session;
         private protected readonly IMongoClient mongoClient;
 
-        protected MongoRepository(IMongoDatabase mongoDatabase, IClientSessionHandle session)
+        public MongoRepository(IMongoDatabase mongoDatabase, IClientSessionHandle session)
         {
             mongoClient = mongoDatabase.Client;
             _session = session;
